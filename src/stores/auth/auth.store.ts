@@ -1,4 +1,4 @@
-import { registerApi } from "@/api/auth/auth.api";
+import { logoutApi, registerApi } from "@/api/auth/auth.api";
 import type { AuthStoreType } from "@/types/auth/auth.type";
 import { showError } from "@/utils/error/error.util";
 import toast from "react-hot-toast";
@@ -23,6 +23,20 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
       set({
         loading: false,
       });
+    }
+  },
+  logout: async () => {
+    set({ loading: true });
+    try {
+      const response = await logoutApi();
+      toast.success(response.message);
+      return true;
+    } catch (error) {
+      console.log(error);
+      showError(error);
+      return false;
+    } finally {
+      set({ loading: false });
     }
   },
 }));
